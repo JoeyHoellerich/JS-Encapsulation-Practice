@@ -5,17 +5,17 @@ async function main() {
     let [fetchedIngredients, fetchedCartItems] = await getAll(`http://localhost:3001/ingredients`, `http://localhost:3001/cart`)
 
     // Save what we fetched to global variables;
-    ingredients = fetchedIngredients
-    items = fetchedCartItems
+    ingredientList.ingredients = fetchedIngredients
+    itemList.items = fetchedCartItems
 
     // Select the first sandwich on page load
-    selectSandwich(items[0])
+    selectSandwich(itemList.items[0])
 
     // Display the ingredients we fetched
-    renderIngredientList();
+    ingredientList.render();
 
     // Display the sandwiches we fetched
-    renderCart();
+    itemList.renderCart();
 
     // Attach event listener to the 'Add Sandwich' button
     let addButton = document.querySelector('.add-button');

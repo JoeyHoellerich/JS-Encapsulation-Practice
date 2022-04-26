@@ -1,22 +1,19 @@
-// The array of sandwiches the user is ordering. 
-//  This will be updated after we fetch.
-let items = [];
+let itemList = {
+    items: [],
+    selectSandwich: null,
+    renderCart: function(){
+        const sandwichUl = document.querySelector('.sandwich-list');
 
-// The sandwich selected in the cart (defaults to the first sandwich)
-let selectedSandwich = null;
-
-// Updates the DOM to display a list of sandwiches from the cart
-function renderCart() {
-    const sandwichUl = document.querySelector('.sandwich-list');
-
-    // Empty the sandwichUl before adding any content to it.
-    sandwichUl.innerHTML = '';
-
-    items.forEach((sandwich) => {
-        const sandwichDiv = createSandwichCard(sandwich);
-        sandwichUl.append(sandwichDiv)
-    })
+        // Empty the sandwichUl before adding any content to it.
+        sandwichUl.innerHTML = '';
+    
+        this.items.forEach((sandwich) => {
+            const sandwichDiv = createSandwichCard(sandwich);
+            sandwichUl.append(sandwichDiv)
+        })
+    }
 }
+
 
 // Creates a DIV to display a single sandwich
 function createSandwichCard(sandwich) {
@@ -63,8 +60,8 @@ function selectSandwich(sandwich) {
     const nameInput = document.querySelector(`.name-input`)
     nameInput.value = sandwich.name
 
-    renderCart()
-    renderIngredientList()
+    itemList.renderCart()
+    ingredientList.render()
 }
 
 // We'll use this function to save the sandwich, either
@@ -100,14 +97,14 @@ async function duplicateSandwich(sandwich) {
 
     newSandwich = await response.json()
 
-    items.push(newSandwich)
+    itemList.items.push(newSandwich)
     selectSandwich(newSandwich)
 }
 
 // Runs when the user clicks 'Delete' on a sandwich card
 async function deleteSandwich(sandwich) {
     // Can't delete the last sandwich in the cart
-    if (items.length === 1) {
+    if (itemList.items.length === 1) {
         return
     }
 
@@ -117,11 +114,11 @@ async function deleteSandwich(sandwich) {
     })
 
     // Remove the sandwich locally
-    items = items.filter(x => x !== sandwich)
+    items = itemList.items.filter(x => x !== sandwich)
     if (selectedSandwich.id === sandwich.id) {
         selectSandwich(items[0])
     } else {
-        renderCart()
+        itemList.renderCart()
     }
 }
 
@@ -146,18 +143,18 @@ async function addSandwich() {
     //  (this will include the id)
     newSandwich = await response.json()
 
-    items.push(newSandwich)
+    itemList.items.push(newSandwich)
     selectSandwich(newSandwich)
 }
 
 function changeSelectedSandwichName(value) {
     selectedSandwich.name = value
     saveSelectedSandwich()
-    renderCart()
+    itemList.renderCart()
 }
 
 function changeSelectedSandwichBread(value) {
     selectedSandwich.bread = value
     saveSelectedSandwich()
-    renderCart()
+    itemList.renderCart()
 }
